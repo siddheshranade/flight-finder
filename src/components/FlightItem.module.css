@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1 1 0;
+}
+
+hr {
+  width: 98%;
+  height: 1px;
+  border: none;
+  background: #e2e3e4;
+}
