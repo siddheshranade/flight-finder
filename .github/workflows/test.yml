@@ -1,6 +1,7 @@
 name: cla-checking
 on: 
-  workflow_dispatch
+  workflow_dispatch:
+  pull_request:
 
 jobs:
   check-cla:
@@ -12,4 +13,4 @@ jobs:
         with:
           node-version: '20'
       - name: node check-cla
-        run: npm install
+        run: node actions/index.js
