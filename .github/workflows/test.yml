@@ -13,4 +13,4 @@ jobs:
         with:
           node-version: '20'
       - name: node check-cla
-        run: node actions/index.js
+        run: node .github/actions/index.js
