@@ -1,4 +1,4 @@
-const { context, getOctokit } = require('@actions/github');
+import { context, getOctokit } from '@actions/github';
 
 console.log('1. Loaded index.js! 🎁');
 
