@@ -1,6 +1,6 @@
-# Flight Finder
+# Flight Finder (test 2 - octokit with token)
 
-A website that gives you real-time details on current flights. (Testing for Actions.)
+A website that gives you real-time details on current flights.
 
 ---
 
