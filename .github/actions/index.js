@@ -1,11 +1,11 @@
-import { context, getOctokit } from '@actions/github';
+import { Octokit, App } from "octokit";
 
 console.log('1. Loaded index.js! 🎁');
 
 async function commentOnPullRequest() {
     console.log('3. Inside async! 🎁');
     const token = process.env.GITHUB_TOKEN;
-    const octokit = getOctokit(token);
+    const octokit = new Octokit({ autho: token });
 
     const { owner, repo, number } = context.issue;
 
