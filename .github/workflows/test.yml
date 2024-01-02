@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  check-cla:
+  comment-on-PR:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -12,7 +12,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: node check-cla
+      - name: install npm packages
+        run: npm install
+      - name: run index.js
         run: node .github/actions/index.js
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
