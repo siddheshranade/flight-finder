@@ -1,4 +1,4 @@
-import { Octokit, App } from "octokit";
+import { Octokit } from "@octokit/core";
 
 console.log('1. Loaded index.js! 🎁');
 
