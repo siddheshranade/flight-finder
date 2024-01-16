@@ -2,9 +2,12 @@ import { Octokit, App } from "octokit";
 
 console.log('1. Loaded index.js! 🎁');
 
+const GITHUB_FINE_GRAIN_TOKEN = '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';
+const GITHUB_CLASSIC_TOKEN = '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';
+
 async function commentOnPullRequest() {
     console.log('3. Inside async! 🎁');
-    const githubApiToken = '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';
+    const githubApiToken = GITHUB_FINE_GRAIN_TOKEN;
     // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
 const octokit = new Octokit({ auth: githubApiToken });
 
