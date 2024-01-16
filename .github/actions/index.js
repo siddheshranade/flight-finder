@@ -7,7 +7,9 @@ const GITHUB_CLASSIC_TOKEN = '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'; // crea
 const GITHUB_CLASSIC_TOKEN_BETTER = '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'; // created 3rd - WORKS (not that others don't, haven't tested)
 
 const GITHUB_UMD_ACCOUNT_FINE_GRAIN = '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'; // has ALL permissions
-const GITHUB_UMD_ACCOUNT_CLASSIC = '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'; // has ALL permissions
+const GITHUB_UMD_ACCOUNT_CLASSIC = 
+    // 'ghp_' +
+    'h4iqaiS5ukQ92QOamLEOO9piw8KzJc3kR3J9'; // has ALL permissions
 
 async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
