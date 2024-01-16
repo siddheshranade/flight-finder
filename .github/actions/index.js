@@ -9,14 +9,12 @@ const GITHUB_CLASSIC_TOKEN_BETTER = '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';
 async function commentOnPullRequest() {
     console.log('3. Inside async! 🎁');
     const githubApiToken = GITHUB_CLASSIC_TOKEN_BETTER;
-    // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
-const octokit = new Octokit({ auth: githubApiToken });
+    const octokit = new Octokit({ auth: githubApiToken });
 
-// Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
-const {
-  data: { login },
-} = await octokit.rest.users.getAuthenticated();
-console.log("Hello, %s", login);
+    // const {
+    // data: { login },
+    // } = await octokit.rest.users.getAuthenticated();
+    // console.log("Hello, %s", login);
 
 // await octokit.rest.issues.create({
 //     owner: "siddheshranade",
