@@ -8,7 +8,7 @@ const GITHUB_CLASSIC_TOKEN_BETTER = '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'; 
 
 async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
-    const octokit = new Octokit({ auth: GITHUB_FINE_GRAIN_TOKEN });
+    const octokit = new Octokit({ auth: `token ${GITHUB_FINE_GRAIN_TOKEN}` });
 
     octokit.request('GET /').then(console.log, console.log);
 
