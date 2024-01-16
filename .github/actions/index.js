@@ -19,16 +19,33 @@ async function commentOnPullRequest() {
     //     }
     // });
 
-    await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
-        owner: 'siddheshranade',
-        repo: 'flight-finder',
-        issue_number: '7',
-        body: 'Comment coming from from workflow! 🚀',
-        headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-        authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`
-        }
-    })
+// Octokit.js
+// https://github.com/octokit/core.js#readme
+const octokit = new Octokit({
+    auth: 'YOUR-TOKEN'
+  })
+  
+  const response = await octokit.request('GET /repos/siddheshranade/flight-finder/issues', {
+    owner: 'siddheshranade',
+    repo: 'flight-finder',
+    headers: {
+      authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`,  
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  });    
+
+  console.log('RESPONSE ', response);
+
+    // await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
+    //     owner: 'siddheshranade',
+    //     repo: 'flight-finder',
+    //     issue_number: '7',
+    //     body: 'Comment coming from from workflow! 🚀',
+    //     headers: {
+    //     'X-GitHub-Api-Version': '2022-11-28',
+    //     authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`
+    //     }
+    // })
 
     console.log('GOT DATA ', data);
     console.log('4. Inside async - end! 🎁');
