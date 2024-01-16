@@ -9,7 +9,7 @@ const GITHUB_CLASSIC_TOKEN_BETTER = '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';
 async function commentOnPullRequest() {
     console.log('3. Inside async! 🎁');
     const githubApiToken = GITHUB_CLASSIC_TOKEN_BETTER;
-    const octokit = new Octokit({ auth: githubApiToken });
+    const octokit = new Octokit({ auth: 'abcdefgh' });
 
     // const {
     // data: { login },
