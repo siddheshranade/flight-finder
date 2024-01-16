@@ -25,16 +25,16 @@ async function commentOnPullRequest() {
     //     }
     // });
 
-// normal GET (WORKS with GITHUB_CLASSIC_TOKEN_BETTER)
-const { data } = await octokit.request('GET /repos/siddheshranade/flight-finder/issues', {
-    owner: 'siddheshranade',
-    repo: 'flight-finder',
-    headers: {
-      authorization: `${process.env.GITHUB_TOKEN}`,  
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  });    
-  console.log('RESPONSE ', data);
+// normal GET (WORKS with GITHUB_CLASSIC_TOKEN_BETTER and with process.env.GITHUB_TOKEN)
+// const { data } = await octokit.request('GET /repos/siddheshranade/flight-finder/issues', {
+//     owner: 'siddheshranade',
+//     repo: 'flight-finder',
+//     headers: {
+//       authorization: `${process.env.GITHUB_TOKEN}`,  
+//       'X-GitHub-Api-Version': '2022-11-28'
+//     }
+//   });    
+//   console.log('RESPONSE ', data);
 
 
 
@@ -49,14 +49,28 @@ const { data } = await octokit.request('GET /repos/siddheshranade/flight-finder/
 //   });    
 //   console.log('RESPONSE ', data);
 
-  //does NOT work:
+// normal POST (does NOT work)
+const response = await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
+    owner: 'siddheshranade',
+    repo: 'flight-finder',
+    issue_number: '7',
+    body: 'Comment coming from from workflow! 🚀',
+    headers: {
+      authorization: `${process.env.GITHUB_TOKEN}`,    
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+});
+console.log('RESPONSE ', response);
+
+
+  // umd POST (does NOT work)
     // const response = await octokit.request('POST /repos/siddhesh-umd/temp/issues/1/comments', {
     //     owner: 'siddhesh-umd',
     //     repo: 'temp',
     //     issue_number: '1',
     //     body: 'Comment coming from from workflow! 🚀',
     //     headers: {
-    //       authorization: `${process.env.GITHUB_TOKEN}`,    
+    //       authorization: `${GITHUB_UMD_ACCOUNT_CLASSIC}`,    
     //       'X-GitHub-Api-Version': '2022-11-28'
     //     }
     // });
