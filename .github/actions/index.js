@@ -14,6 +14,13 @@ const {
 } = await octokit.rest.users.getAuthenticated();
 console.log("Hello, %s", login);
 
+await octokit.rest.issues.create({
+    owner: "siddheshranade",
+    repo: "flight-finder",
+    title: "Issue from Octokit",
+    body: "I created this issue using Octokit!",
+  });
+
     // const { owner, repo, number } = context.issue;
 
     // await octokit.issues.createComment({
