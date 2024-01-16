@@ -21,16 +21,15 @@ async function commentOnPullRequest() {
     // });
 
 
-  const response = await octokit.request('GET /repos/siddheshranade/flight-finder/issues', {
+  const { data } = await octokit.request('GET /repos/siddheshranade/combined-search/issues', {
     owner: 'siddheshranade',
-    repo: 'flight-finder',
+    repo: 'combined-search',
     headers: {
       authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`,  
       'X-GitHub-Api-Version': '2022-11-28'
     }
   });    
-
-  console.log('RESPONSE ', response);
+  console.log('RESPONSE ', data);
 
   // //does NOT work:
     // await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
@@ -43,8 +42,9 @@ async function commentOnPullRequest() {
     //     authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`
     //     }
     // })
+    // console.log('GOT DATA ', data);
 
-    console.log('GOT DATA ', data);
+
     console.log('4. Inside async - end! 🎁');
 }
 
