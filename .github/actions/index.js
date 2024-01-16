@@ -56,7 +56,8 @@ const response = await octokit.request('POST /repos/siddheshranade/flight-finder
     issue_number: '7',
     body: 'Comment coming from from workflow! 🚀',
     headers: {
-      authorization: `${process.env.GITHUB_TOKEN}`,    
+      authorization: `${process.env.GITHUB_TOKEN}`,
+      accept: 'application/vnd.github+json',    
       'X-GitHub-Api-Version': '2022-11-28'
     }
 });
