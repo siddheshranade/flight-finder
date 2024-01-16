@@ -38,7 +38,7 @@ async function commentOnPullRequest() {
         issue_number: '7',
         body: 'Comment coming from from workflow! 🚀',
         headers: {
-          authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`,    
+          authorization: `${GITHUB_FINE_GRAIN_TOKEN}`,    
           'X-GitHub-Api-Version': '2022-11-28'
         }
     });
