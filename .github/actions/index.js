@@ -11,6 +11,7 @@ async function commentOnPullRequest() {
     const octokit = new Octokit();
 
 
+    // //DOES work:
     // const { data } = await octokit.request("GET /users/siddheshranade/repos", {
     //     username: "siddheshranade",
     //     headers: {
@@ -19,12 +20,7 @@ async function commentOnPullRequest() {
     //     }
     // });
 
-// Octokit.js
-// https://github.com/octokit/core.js#readme
-const octokit = new Octokit({
-    auth: 'YOUR-TOKEN'
-  })
-  
+
   const response = await octokit.request('GET /repos/siddheshranade/flight-finder/issues', {
     owner: 'siddheshranade',
     repo: 'flight-finder',
@@ -36,6 +32,7 @@ const octokit = new Octokit({
 
   console.log('RESPONSE ', response);
 
+  // //does NOT work:
     // await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
     //     owner: 'siddheshranade',
     //     repo: 'flight-finder',
