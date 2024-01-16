@@ -6,6 +6,8 @@ const GITHUB_FINE_GRAIN_TOKEN = 'github_pat_11AELG4AY0kzIuxzpK6Q83_MOPE5V4SsMOFW
 const GITHUB_CLASSIC_TOKEN = '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'; // created 1st
 const GITHUB_CLASSIC_TOKEN_BETTER = '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'; // created 3rd - WORKS (not that others don't, haven't tested)
 
+const GITHUB_UMD_ACCOUNT_FINE_GRAIN_WITH_ALL_PERMISSIONS = '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';
+
 async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
     const octokit = new Octokit();
@@ -21,11 +23,11 @@ async function commentOnPullRequest() {
     // });
 
 //DOES work:
-  const { data } = await octokit.request('GET /repos/siddheshranade/combined-search/issues', {
-    owner: 'siddheshranade',
-    repo: 'combined-search',
+  const { data } = await octokit.request('GET /repos/siddhesh-umd/temp/issues', {
+    owner: 'siddhesh-umd',
+    repo: 'temp',
     headers: {
-      authorization: `${GITHUB_FINE_GRAIN_TOKEN}`,  
+      authorization: `${GITHUB_UMD_ACCOUNT_FINE_GRAIN_WITH_ALL_PERMISSIONS}`,  
       'X-GitHub-Api-Version': '2022-11-28'
     }
   });    
