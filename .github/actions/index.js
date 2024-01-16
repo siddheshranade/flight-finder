@@ -10,11 +10,13 @@ async function commentOnPullRequest() {
     console.log('3. Inside async! 🎁');
     const octokit = new Octokit({ auth: GITHUB_CLASSIC_TOKEN_BETTER });
 
-    await octokit.request('GET /user', {
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
-      })
+    octokit.request('GET /').then(console.log, console.log);
+
+    // await octokit.request('GET /user', {
+    //     headers: {
+    //       'X-GitHub-Api-Version': '2022-11-28'
+    //     }
+    //   });
 
     // const {
     // data: { login },
