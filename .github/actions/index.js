@@ -15,7 +15,7 @@ async function commentOnPullRequest() {
 
 
 
-    
+
     // //DOES work:
     // const { data } = await octokit.request("GET /users/siddheshranade/repos", {
     //     username: "siddheshranade",
@@ -37,7 +37,7 @@ async function commentOnPullRequest() {
 //   console.log('RESPONSE ', data);
 
   // //does NOT work:
-    const response = await octokit.request('POST /repos/siddhesh-umd/temp/issues/7/comments', {
+    const response = await octokit.request('POST /repos/siddhesh-umd/temp/issues/1/comments', {
         owner: 'siddhesh-umd',
         repo: 'temp',
         issue_number: '1',
