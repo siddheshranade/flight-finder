@@ -7,7 +7,7 @@ const GITHUB_CLASSIC_TOKEN = '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'; // crea
 const GITHUB_CLASSIC_TOKEN_BETTER = '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'; // created 3rd
 
 async function commentOnPullRequest() {
-    console.log('3. Inside async! 🎁');
+    console.log('3. Inside async - start! 🎁');
     const octokit = new Octokit({ auth: GITHUB_FINE_GRAIN_TOKEN });
 
     octokit.request('GET /').then(console.log, console.log);
@@ -38,7 +38,7 @@ async function commentOnPullRequest() {
     //     issue_number: number,
     //     body: 'Testing comment from GitHub Actions! Messi.'
     // });
-    console.log('4. Inside async! 🎁');
+    console.log('4. Inside async - end! 🎁');
 }
 
 console.log('2. Calling async function!! 🎁');
