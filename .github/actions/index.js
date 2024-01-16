@@ -53,7 +53,7 @@ async function commentOnPullRequest() {
 const response = await octokit.request('POST /repos/siddheshranade/flight-finder/issues/7/comments', {
     owner: 'siddheshranade',
     repo: 'flight-finder',
-    issue_number: '7',
+    issue_number: 7,
     body: 'Comment coming from from workflow! 🚀',
     headers: {
       authorization: `${process.env.GITHUB_TOKEN}`,
