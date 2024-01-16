@@ -10,8 +10,10 @@ async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
 
     const octokit = new Octokit();
-    const { data } = await octokit.request ("GET /", {
+    const { data } = await octokit.request("GET /users/siddheshranade/repos", {
+        username: "siddheshranade",
         headers: {
+            "If-None-Match": "",
             authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`
         }
     });
