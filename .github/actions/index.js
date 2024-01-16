@@ -8,9 +8,19 @@ const GITHUB_CLASSIC_TOKEN_BETTER = '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'; 
 
 async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
-    const octokit = new Octokit({ auth: `token ${GITHUB_CLASSIC_TOKEN_BETTER}` });
 
-    octokit.request('GET /').then(console.log, console.log);
+    const octokit = new Octokit();
+    const { data } = await octokit.request ("GET /", {
+        headers: {
+            authorization: `${GITHUB_CLASSIC_TOKEN_BETTER}`
+        }
+    });
+
+    console.log('GOT DATA ', data);
+
+    // const octokit = new Octokit({ auth: `token ${GITHUB_CLASSIC_TOKEN_BETTER}` });
+
+    // octokit.request('GET /').then(console.log, console.log);
 
     // await octokit.request('GET /user', {
     //     headers: {
