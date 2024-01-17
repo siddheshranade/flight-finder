@@ -18,11 +18,15 @@ function getCommentBody() {
     const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
     const templateFunction = Handlebars.compile(template);
     const commentBody = templateFunction({ 
-        askAboutContributors: false,
+        askAboutContributors: true,
         userName: "siddheshranade",
         contributorsUrl: "https://google.com"
      });
-    console.log('SIDBOI GOT \n', commentBody);    
+
+     
+    // console.log('SIDBOI GOT \n', commentBody);    
+
+    return commentBody;
 };
 
 async function commentOnPullRequest() {
