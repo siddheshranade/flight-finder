@@ -72,12 +72,12 @@ async function getValueFromSheet() {
         keyFile: './cla-checking-test-gcp-service-key.json',
         scopes: ['https://www.googleapis.com/auth/spreadsheets']
     });
-    console.log('#4 ', auth);
+    console.log('#4');
 
     const authClient = await auth.getClient();
-    console.log('#5 ', authClient);
+    console.log('#5');
     sheets.spreadsheets.values.get({
-        spreadsheetId: '',
+        spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
         range: 'Sheet1!A1',
         auth: authClient
     },
