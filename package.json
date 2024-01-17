@@ -13,6 +13,7 @@
     "@googleapis/sheets": "^5.0.5",
     "@octokit/core": "^5.0.2",
     "axios": "^1.4.0",
+    "fs-extra": "^11.2.0",
     "googleapis": "^131.0.0",
     "handlebars": "^4.7.8",
     "octokit": "^3.1.2",

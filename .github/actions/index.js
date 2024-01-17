@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import { google } from "googleapis";
-// import 
+import Handlebars from "handlebars";
+import fs from "fs-extra";
 console.log('1. Loaded index.js! 🎁');
 
 // const GITHUB_FINE_GRAIN_TOKEN = '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';
@@ -51,10 +52,10 @@ async function commentOnPullRequest() {
 
 // normal POST WORKS NOW!!!
 const response = await octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
-    owner: 'siddheshranade',
+    owner: process.env.GITHUB_ACTOR,
     repo: 'flight-finder',
     issue_number: process.env.PR_NUMBER,
-    body: 'Comment coming from from workflow! 🚀',
+    body: getCommentBody(),
     headers: {
       authorization: `bearer ${process.env.GITHUB_TOKEN}`,
       accept: 'application/vnd.github+json',    
@@ -96,15 +97,18 @@ async function getValueFromSheet() {
 }
 
 console.log('2. Calling async function!! 🎁');
-// commentOnPullRequest();
+commentOnPullRequest();
 // getValueFromSheet();
 
-function handlebarStuff() {
-    const template = '<span>{{greetingMsg}}</span>';
+function getCommentBody() {
+    // const template = '<span>{{greetingMsg}}</span>';
+    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
     const templateFunction = Handlebars.compile(template);
-    const html = templateFunction({ greetingMsg: 'Greetings from Siddhesh\'s handelbars file`!' });
-    console.log(html);    
+    const commentBody = templateFunction({ 
+        askAboutContributors: false,
+        userName: "siddheshranade",
+        contributorsUrl: "https://google.com"
+     });
+    console.log('SIDBOI GOT \n', commentBody);    
 };
-
-handlebarStuff();
 
