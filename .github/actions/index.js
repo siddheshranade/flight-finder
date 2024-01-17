@@ -13,6 +13,18 @@ console.log('1. Loaded index.js! 🎁');
 //     // 'ghp_' +
 //     'h4iqaiS5ukQ92QOamLEOO9piw8KzJc3kR3J9'; // has ALL permissions
 
+function getCommentBody() {
+    // const template = '<span>{{greetingMsg}}</span>';
+    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
+    const templateFunction = Handlebars.compile(template);
+    const commentBody = templateFunction({ 
+        askAboutContributors: false,
+        userName: "siddheshranade",
+        contributorsUrl: "https://google.com"
+     });
+    console.log('SIDBOI GOT \n', commentBody);    
+};
+
 async function commentOnPullRequest() {
     console.log('3. Inside async - start! 🎁');
     const octokit = new Octokit();
@@ -51,11 +63,14 @@ async function commentOnPullRequest() {
 //   console.log('RESPONSE ', data);
 
 // normal POST WORKS NOW!!!
+
+const commentBody = getCommentBody();
+
 const response = await octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
     owner: process.env.GITHUB_ACTOR,
     repo: 'flight-finder',
     issue_number: process.env.PR_NUMBER,
-    body: getCommentBody(),
+    body: commentBody,
     headers: {
       authorization: `bearer ${process.env.GITHUB_TOKEN}`,
       accept: 'application/vnd.github+json',    
@@ -100,15 +115,4 @@ console.log('2. Calling async function!! 🎁');
 commentOnPullRequest();
 // getValueFromSheet();
 
-function getCommentBody() {
-    // const template = '<span>{{greetingMsg}}</span>';
-    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
-    const templateFunction = Handlebars.compile(template);
-    const commentBody = templateFunction({ 
-        askAboutContributors: false,
-        userName: "siddheshranade",
-        contributorsUrl: "https://google.com"
-     });
-    console.log('SIDBOI GOT \n', commentBody);    
-};
 
