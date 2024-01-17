@@ -1,4 +1,4 @@
-# Flight Finder
+# Flight Finder/.M,/.M
 
 A website that gives you real-time details on current flights.
 
