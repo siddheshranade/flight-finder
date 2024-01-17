@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { google } from "googleapis";
+// import 
 console.log('1. Loaded index.js! 🎁');
 
 // const GITHUB_FINE_GRAIN_TOKEN = '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';
@@ -96,5 +97,14 @@ async function getValueFromSheet() {
 
 console.log('2. Calling async function!! 🎁');
 // commentOnPullRequest();
-getValueFromSheet();
+// getValueFromSheet();
+
+function handlebarStuff() {
+    const template = '<span>{{greetingMsg}}</span>';
+    const templateFunction = Handlebars.compile(template);
+    const html = templateFunction({ greetingMsg: 'Greetings from Siddhesh\'s handelbars file`!' });
+    console.log(html);    
+};
+
+handlebarStuff();
 
