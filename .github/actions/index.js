@@ -58,7 +58,7 @@ async function commentOnPullRequest() {
 
 const getSettings = () => {
     return {
-        owner: /*process.env.GITHUB_ACTOR*/'fnicollet',
+        owner: process.env.GITHUB_ACTOR,
         repo: 'flight-finder',
         pull_request_id: process.env.PR_NUMBER,
     }
