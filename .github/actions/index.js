@@ -48,7 +48,7 @@ console.log('loaded index.js 🎁');
 async function commentOnPullRequest() {
     const settings = getSettings();
     const askForCla = getAskForCla(); 
-    const errorCla = false; // modify according to sheets api response
+    const errorCla = true; // modify according to sheets api response
     const response = await writeComment(settings, askForCla, errorCla);
     console.log('RESPONSE ', response);
     
