@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/core";
 import { google } from "googleapis";
 import Handlebars from "handlebars";
 import fs from "fs-extra";
-console.log('1. Loaded index.js! 🎁');
+console.log('loaded index.js 🎁');
 
 // const GITHUB_FINE_GRAIN_TOKEN = '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';
 // const GITHUB_CLASSIC_TOKEN = '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'; // created 1st
@@ -12,26 +12,6 @@ console.log('1. Loaded index.js! 🎁');
 // const GITHUB_UMD_ACCOUNT_CLASSIC = 
 //     // 'ghp_' +
 //     'h4iqaiS5ukQ92QOamLEOO9piw8KzJc3kR3J9'; // has ALL permissions
-
-function getCommentBody() {
-    // const template = '<span>{{greetingMsg}}</span>';
-    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
-    const templateFunction = Handlebars.compile(template);
-    const commentBody = templateFunction({ 
-        askAboutContributors: true,
-        userName: "siddheshranade",
-        contributorsUrl: "https://google.com"
-     });
-
-     
-    // console.log('SIDBOI GOT \n', commentBody);    
-
-    return commentBody;
-};
-
-async function commentOnPullRequest() {
-    console.log('3. Inside async - start! 🎁');
-    const octokit = new Octokit();
 
     // //DOES work:
     // const { data } = await octokit.request("GET /users/siddheshranade/repos", {
@@ -53,8 +33,6 @@ async function commentOnPullRequest() {
 //   });    
 //   console.log('RESPONSE ', data);
 
-
-
 // umd GET (WORKS)
 //   const { data } = await octokit.request('GET /repos/siddhesh-umd/temp/issues', {
 //     owner: 'siddhesh-umd',
@@ -66,24 +44,61 @@ async function commentOnPullRequest() {
 //   });    
 //   console.log('RESPONSE ', data);
 
-// normal POST WORKS NOW!!!
 
-const commentBody = getCommentBody();
+async function commentOnPullRequest() {
+    const settings = getSettings();
+    const askForCla = getAskForCla(); 
+    const errorCla = false; // modify according to sheets api response
+    const response = await writeComment(settings, askForCla, errorCla);
+    console.log('RESPONSE ', response);
+    
+};
 
-const response = await octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
-    owner: process.env.GITHUB_ACTOR,
-    repo: 'flight-finder',
-    issue_number: process.env.PR_NUMBER,
-    body: commentBody,
+const getSettings = () => {
+    return {
+        owner: process.env.GITHUB_ACTOR,
+        repo: 'flight-finder',
+        pull_request_id: process.env.PR_NUMBER,
+    }
+}
+
+const getAskForCla = () => {
+    return true; // sheets api check
+}
+
+const writeComment = async (settings, askForCla, errorCla) => {
+    const octokit = new Octokit();
+
+    console.log('before request');
+    return octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
+    owner: settings.owner,
+    repo: settings.repo,
+    issue_number: settings.pull_request_id,
+    body: getCommentBody(askForCla, errorCla),
     headers: {
       authorization: `bearer ${process.env.GITHUB_TOKEN}`,
       accept: 'application/vnd.github+json',    
       'X-GitHub-Api-Version': '2022-11-28'
     }
 });
-console.log('RESPONSE ', response);
-    console.log('4. Inside async - end! 🎁');
 }
+
+const getCommentBody = (askForCla, errorCla) => {
+    // const template = '<span>{{greetingMsg}}</span>';
+    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
+    const templateFunction = Handlebars.compile(template);
+    const commentBody = templateFunction({ 
+        errorCla: errorCla,
+        askForCla: askForCla,
+        userName: "siddheshranade",
+        contributorsUrl: "https://google.com"
+     });
+
+    // console.log('SIDBOI GOT \n', commentBody);    
+    return commentBody;
+};
+
+commentOnPullRequest();
 
 async function getValueFromSheet() {
     console.log('#3');
@@ -114,9 +129,3 @@ async function getValueFromSheet() {
     );
     console.log('#6 after get');
 }
-
-console.log('2. Calling async function!! 🎁');
-commentOnPullRequest();
-// getValueFromSheet();
-
-
