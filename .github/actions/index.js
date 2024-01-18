@@ -46,27 +46,35 @@ console.log('loaded index.js 🎁');
 
 
 async function commentOnPullRequest() {
+
     const settings = getSettings();
-    const askForCla = getAskForCla(); 
-    const errorCla = true; // modify according to sheets api response
-    const response = await writeComment(settings, askForCla, errorCla);
+    const hasCla = await checkIfHasCla(settings.owner);
+    console.log('HAS CLA? ', hasCla); 
+    const errorCla = false; // TODO set this
+    const response = await writeComment(settings, hasCla, errorCla);
     console.log('RESPONSE ', response);
     
 };
 
 const getSettings = () => {
     return {
-        owner: process.env.GITHUB_ACTOR,
+        owner: /*process.env.GITHUB_ACTOR*/'fnicollet',
         repo: 'flight-finder',
         pull_request_id: process.env.PR_NUMBER,
     }
 }
 
-const getAskForCla = () => {
-    return true; // sheets api check
+const checkIfHasCla = async (username) => {    
+    const googleSheetsApi = await getGoogleSheetsApiClient();
+
+    let foundIndividualCLA = await checkIfIndividualClaFound(googleSheetsApi, username);
+    let foundCorporateCLA = await checkIfCorporateClaFound(googleSheetsApi, username);
+    console.log('bool ', foundIndividualCLA, foundCorporateCLA);
+
+    return foundIndividualCLA && foundCorporateCLA;
 }
 
-const writeComment = async (settings, askForCla, errorCla) => {
+const writeComment = async (settings, hasCla, errorCla) => {
     const octokit = new Octokit();
 
     console.log('before request');
@@ -74,7 +82,7 @@ const writeComment = async (settings, askForCla, errorCla) => {
     owner: settings.owner,
     repo: settings.repo,
     issue_number: settings.pull_request_id,
-    body: getCommentBody(askForCla, errorCla),
+    body: getCommentBody(settings.owner, hasCla, errorCla),
     headers: {
       authorization: `bearer ${process.env.GITHUB_TOKEN}`,
       accept: 'application/vnd.github+json',    
@@ -83,15 +91,15 @@ const writeComment = async (settings, askForCla, errorCla) => {
 });
 }
 
-const getCommentBody = (askForCla, errorCla) => {
+const getCommentBody = (username, hasCla, errorCla) => {
     // const template = '<span>{{greetingMsg}}</span>';
     const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
     const templateFunction = Handlebars.compile(template);
     const commentBody = templateFunction({ 
         errorCla: errorCla,
-        askForCla: askForCla,
-        userName: "siddheshranade",
-        contributorsUrl: "https://google.com"
+        hasCla: hasCla,
+        username: username,
+        contributorsUrl: "https://google.com" /* TODO configure */
      });
 
     // console.log('SIDBOI GOT \n', commentBody);    
@@ -100,32 +108,65 @@ const getCommentBody = (askForCla, errorCla) => {
 
 commentOnPullRequest();
 
-async function getValueFromSheet() {
-    console.log('#3');
-    const sheets = google.sheets('v4');
-
+// const getGoogleSheetsApiClient = async () => {
+async function getGoogleSheetsApiClient() {
     const auth = new google.auth.GoogleAuth({
-        keyFile: './cla-checking-test-gcp-service-key.json',
+        keyFile: 'GoogleConfig.json',
         scopes: ['https://www.googleapis.com/auth/spreadsheets']
     });
-    console.log('#4');
 
-    const authClient = await auth.getClient();
-    console.log('#5');
-    sheets.spreadsheets.values.get({
-        spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
-        range: 'Sheet1!A1',
-        auth: authClient
-    },
-    (err, response) => {
-        if (err) {
-            console.error('The API returned an error:', err);
-            return;
-        }
+    const googleAuthClient = await auth.getClient();
 
-        const value = response.data.values[0][0];
-        console.log('VALUE ', value);
-    }
-    );
-    console.log('#6 after get');
+    return google.sheets({version: 'v4', auth: googleAuthClient });
 }
+
+const checkIfIndividualClaFound = async (googleSheetsApi, username) => {
+    const response = await googleSheetsApi.spreadsheets.values.get({
+        spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
+        range: 'D2:D'
+    });
+
+    const rows = response.data.values;
+
+    for (let i = 0; i < rows.length; i++) {
+        if(rows[i].length === 0) {
+            continue;
+        }
+        const rowUsername = rows[i][0].toLowerCase();
+        if (username.toLowerCase() === rowUsername) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const checkIfCorporateClaFound = async (googleSheetsApi, username) => {
+    console.log('corporate cla check...');
+    const response = await googleSheetsApi.spreadsheets.values.get({
+        spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8',
+        range: 'H2:H'
+    });
+
+    const rows = response.data.values;
+    // console.log('rows ', rows);
+    for (let i = 0; i < rows.length; i++) {
+        if(rows[i].length === 0) {
+            continue;
+        }
+        let rowScheduleA = rows[i][0].toLowerCase();
+        // We're a little more lenient with the ScheduleA username check, since it's an unformatted text field.
+        // We split the ScheduleA field by whitespace see if we can find the GitHub username in there.
+        rowScheduleA = rowScheduleA.replace(/\n/g, ' ');
+        const words = rowScheduleA.split(' ');
+
+        for (let j = 0; j < words.length; j++) {
+            if (words[j].includes(username.toLowerCase())) {
+                // console.log('found in ', words[j]);
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
