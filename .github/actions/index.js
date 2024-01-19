@@ -5,7 +5,7 @@ import fs from "fs-extra";
 
 const PULL_REQUST_INFO = {
     id: process.env.PR_NUMBER,
-    repoName: process.env.GITHUB_REPOSITORY,
+    repoName: process.env.GITHUB_REPOSITORY.split('/')[1],
     username: process.env.GITHUB_ACTOR,
     githubToken: process.env.GITHUB_TOKEN
 };
