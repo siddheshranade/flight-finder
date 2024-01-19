@@ -9,7 +9,7 @@ A website that gives you real-time details on current flights.
 1. Download this project folder or `git clone` the repo
 2. Open terminal, cd to this project's root directory
 3. Run `npm install`
-4. Run `npm run dev`
+4. Run `npm run dev`kkk
 5. Open the localhost URL that appears in the terminal
 
 ---
