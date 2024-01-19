@@ -32,7 +32,7 @@ const main = async () => {
         errorFoundOnCLACheck = error.toString();
     }
 
-    // const response = await postCommentOnPullRequest(areBothCLAsSigned, errorFoundOnCLACheck);
+    const response = await postCommentOnPullRequest(areBothCLAsSigned, errorFoundOnCLACheck);
 };
 
 const checkIfUserHasSignedBothCLAs = async (username) => {    
