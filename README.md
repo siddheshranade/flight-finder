@@ -1,4 +1,4 @@
-# Flight Finder
+# Flight Finder - this will fail
 
 A website that gives you real-time details on current flights.
 
