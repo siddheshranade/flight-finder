@@ -2,80 +2,69 @@ import { Octokit } from "@octokit/core";
 import { google } from "googleapis";
 import Handlebars from "handlebars";
 import fs from "fs-extra";
-console.log('loaded index.js 🎁');
 
-async function commentOnPullRequest() {
-    const settings = getSettings();
-    let hasCla;
-    let errorCla;
-
-    // hasCla = await checkIfHasCla(settings.owner);
-
-    try {
-        hasCla = await checkIfHasCla(settings.owner);
-    } catch (error) {
-        // TODO check what error printed for each kind of failure
-        console.log('--error--\n');
-        console.log(error);
-        errorCla = error.toString();
-        console.log('--to print-- ', errorCla);
-        console.log('-- done printing error --');
-    }
-
-    console.log('HAS CLA? ', hasCla);
-
-    const response = await writeComment(settings, hasCla, errorCla);
-    console.log('RESPONSE ', response);
-    
+const PULL_REQUST_INFO = {
+    id: process.env.PR_NUMBER,
+    repoName: process.env.GITHUB_REPOSITORY,
+    username: process.env.GITHUB_ACTOR,
+    githubToken: process.env.GITHUB_TOKEN
 };
 
-const getSettings = () => {
-    return {
-        owner: process.env.GITHUB_ACTOR || 'siddheshranade',
-        repo: 'flight-finder',
-        pull_request_id: process.env.PR_NUMBER,
-    }
-}
+/**
+ * keep secret:
+ * individual_cla_id
+ * corporate_cla_id
+ */
 
-const checkIfHasCla = async (username) => {    
+/**
+ * other data:
+ * contributors URL
+ */
+
+const main = async () => {
+    console.log('--PULL_REQUST_INFO-- ', PULL_REQUST_INFO);
+    let areBothCLAsSigned;
+    let errorFoundOnCLACheck;
+
+    try {
+        areBothCLAsSigned = await checkIfUserHasSignedBothCLAs(PULL_REQUST_INFO.username);
+    } catch (error) {
+        errorFoundOnCLACheck = error.toString();
+    }
+
+    // const response = await postCommentOnPullRequest(areBothCLAsSigned, errorFoundOnCLACheck);
+};
+
+const checkIfUserHasSignedBothCLAs = async (username) => {    
     const googleSheetsApi = await getGoogleSheetsApiClient();
-    // console.log('--googleSheetsApi-- ', googleSheetsApi);
-    console.log('--1--');
-    let foundIndividualCLA = await checkIfIndividualClaFound(googleSheetsApi, username);
-    console.log('--2--');
-    let foundCorporateCLA = await checkIfCorporateClaFound(googleSheetsApi, username);
-    console.log('--3--');
-    console.log('cla bool result ', foundIndividualCLA, foundCorporateCLA);
+    let foundIndividualCLA = await checkIfIndividualCLAFound(googleSheetsApi, username);
+    let foundCorporateCLA = await checkIfCorporateCLAFound(googleSheetsApi, username);
 
     return foundIndividualCLA && foundCorporateCLA;
-}
+};
 
 const getGoogleSheetsApiClient = async () => {
     const auth = new google.auth.GoogleAuth({
         keyFile: 'GoogleConfig.json',
         scopes: ['https://www.googleapis.com/auth/spreadsheets']
     });
-    console.log('--auth-- ', auth);
     const googleAuthClient = await auth.getClient();
 
     return google.sheets({version: 'v4', auth: googleAuthClient });
-}
+};
 
-const checkIfIndividualClaFound = async (googleSheetsApi, username) => {
+const checkIfIndividualCLAFound = async (googleSheetsApi, username) => {
     const response = await googleSheetsApi.spreadsheets.values.get({
-        // spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE2',// fake id
         spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
         range: 'D2:D'
     });
 
-    console.log('--response1-- ', response.status);
-
     const rows = response.data.values;
-
     for (let i = 0; i < rows.length; i++) {
         if(rows[i].length === 0) {
             continue;
         }
+
         const rowUsername = rows[i][0].toLowerCase();
         if (username.toLowerCase() === rowUsername) {
             return true;
@@ -85,18 +74,13 @@ const checkIfIndividualClaFound = async (googleSheetsApi, username) => {
     return false;
 };
 
-const checkIfCorporateClaFound = async (googleSheetsApi, username) => {
-    console.log('check2');
+const checkIfCorporateCLAFound = async (googleSheetsApi, username) => {
     const response = await googleSheetsApi.spreadsheets.values.get({
-        // spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC82', // fake
         spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8',
         range: 'H2:H'
     });
 
-    console.log('--response2-- ', response.status);
-
     const rows = response.data.values;
-    // console.log('rows ', rows);
     for (let i = 0; i < rows.length; i++) {
         if(rows[i].length === 0) {
             continue;
@@ -118,38 +102,33 @@ const checkIfCorporateClaFound = async (googleSheetsApi, username) => {
     return false;
 };
 
-const writeComment = async (settings, hasCla, errorCla) => {
+const postCommentOnPullRequest = async (areBothCLAsSigned, errorFoundOnCLACheck) => {
     const octokit = new Octokit();
 
-    console.log('-- writeComment start --');
-    return octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
-    owner: settings.owner,
-    repo: settings.repo,
-    issue_number: settings.pull_request_id,
-    body: getCommentBody(settings.owner, hasCla, errorCla),
-    headers: {
-      authorization: `bearer ${process.env.GITHUB_TOKEN}`,
-      accept: 'application/vnd.github+json',    
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-});
-}
+    return octokit.request(`POST /repos/${PULL_REQUST_INFO.username}/${PULL_REQUST_INFO.repoName}/issues/${PULL_REQUST_INFO.id}/comments`, {
+        owner: PULL_REQUST_INFO.username,
+        repo: PULL_REQUST_INFO.repoName,
+        issue_number: PULL_REQUST_INFO.id,
+        body: getCommentBody(areBothCLAsSigned, errorFoundOnCLACheck),
+        headers: {
+            authorization: `bearer ${PULL_REQUST_INFO.githubToken}`,
+            accept: 'application/vnd.github+json',    
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    });
+};
 
-const getCommentBody = (username, hasCla, errorCla) => {
-    // const template = '<span>{{greetingMsg}}</span>';
-    console.log('--getCommentBody start--');
-    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment2.hbs', 'utf-8');
-    const templateFunction = Handlebars.compile(template);
-    const commentBody = templateFunction({ 
-        errorCla: errorCla,
-        hasCla: hasCla,
-        username: username,
+const getCommentBody = (areBothCLAsSigned, errorFoundOnCLACheck) => {
+    const commentTemplate = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
+    const getTemplate = Handlebars.compile(commentTemplate);
+    const commentBody = getTemplate({ 
+        errorCla: errorFoundOnCLACheck,
+        hasCla: areBothCLAsSigned,
+        username: PULL_REQUST_INFO.username,
         contributorsUrl: "https://google.com" /* TODO configure */
      });
-
-    // console.log('SIDBOI GOT \n', commentBody);   
-    console.log('--getCommentBody end--'); 
+ 
     return commentBody;
 };
 
-commentOnPullRequest();
+main();
