@@ -125,7 +125,7 @@ const postCommentOnPullRequest = async (hasSignedCLA, errorFoundOnCLACheck) => {
 };
 
 const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
-    const commentTemplate = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
+    const commentTemplate = fs.readFileSync('./.github/scripts/templates/pullRequestComment.hbs', 'utf-8');
     const getTemplate = Handlebars.compile(commentTemplate);
     const commentBody = getTemplate({ 
         errorCla: errorFoundOnCLACheck,
