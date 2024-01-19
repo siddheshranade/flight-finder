@@ -7,40 +7,45 @@ const PULL_REQUST_INFO = {
     id: process.env.PR_NUMBER,
     repoName: process.env.GITHUB_REPOSITORY.split('/')[1],
     username: process.env.GITHUB_ACTOR,
-    githubToken: process.env.GITHUB_TOKEN
+    gitHubToken: process.env.GITHUB_TOKEN
 };
 
-/**
- * keep secret:
- * individual_cla_id
- * corporate_cla_id
- */
+/* TODO: Store in repo secrets */
+/* TODO: Replace with actual Cesium spreadsheet Ids */
+const GOOGLE_SHEETS_INFO = {
+    individualCLASheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
+    corporateCLASheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8'
+};
 
-/**
- * other data:
- * contributors URL
- */
+/* TODO: Change to actual link */
+const LINKS = {
+    contributorsListURL: 'https://google.com'
+};
 
 const main = async () => {
     console.log('--PULL_REQUST_INFO-- ', PULL_REQUST_INFO);
-    let areBothCLAsSigned;
+    let hasSignedCLA;
     let errorFoundOnCLACheck;
 
     try {
-        areBothCLAsSigned = await checkIfUserHasSignedBothCLAs(PULL_REQUST_INFO.username);
+        hasSignedCLA = await checkIfUserHasSignedAnyCLA();
     } catch (error) {
         errorFoundOnCLACheck = error.toString();
     }
 
-    const response = await postCommentOnPullRequest(areBothCLAsSigned, errorFoundOnCLACheck);
+    const response = await postCommentOnPullRequest(hasSignedCLA, errorFoundOnCLACheck);
 };
 
-const checkIfUserHasSignedBothCLAs = async (username) => {    
+const checkIfUserHasSignedAnyCLA = async () => {    
     const googleSheetsApi = await getGoogleSheetsApiClient();
-    let foundIndividualCLA = await checkIfIndividualCLAFound(googleSheetsApi, username);
-    let foundCorporateCLA = await checkIfCorporateCLAFound(googleSheetsApi, username);
 
-    return foundIndividualCLA && foundCorporateCLA;
+    let foundIndividualCLA = await checkIfIndividualCLAFound(googleSheetsApi);
+    if (foundIndividualCLA) {
+        return true;
+    }
+
+    let foundCorporateCLA = await checkIfCorporateCLAFound(googleSheetsApi);
+    return foundCorporateCLA;
 };
 
 const getGoogleSheetsApiClient = async () => {
@@ -53,9 +58,9 @@ const getGoogleSheetsApiClient = async () => {
     return google.sheets({version: 'v4', auth: googleAuthClient });
 };
 
-const checkIfIndividualCLAFound = async (googleSheetsApi, username) => {
+const checkIfIndividualCLAFound = async (googleSheetsApi) => {
     const response = await googleSheetsApi.spreadsheets.values.get({
-        spreadsheetId: '1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE',
+        spreadsheetId: GOOGLE_SHEETS_INFO.individualCLASheetId,
         range: 'D2:D'
     });
 
@@ -66,7 +71,7 @@ const checkIfIndividualCLAFound = async (googleSheetsApi, username) => {
         }
 
         const rowUsername = rows[i][0].toLowerCase();
-        if (username.toLowerCase() === rowUsername) {
+        if (PULL_REQUST_INFO.username.toLowerCase() === rowUsername) {
             return true;
         }
     }
@@ -74,9 +79,9 @@ const checkIfIndividualCLAFound = async (googleSheetsApi, username) => {
     return false;
 };
 
-const checkIfCorporateCLAFound = async (googleSheetsApi, username) => {
+const checkIfCorporateCLAFound = async (googleSheetsApi) => {
     const response = await googleSheetsApi.spreadsheets.values.get({
-        spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8',
+        spreadsheetId: GOOGLE_SHEETS_INFO.corporateCLASheetId,
         range: 'H2:H'
     });
 
@@ -92,8 +97,9 @@ const checkIfCorporateCLAFound = async (googleSheetsApi, username) => {
         const words = rowScheduleA.split(' ');
 
         for (let j = 0; j < words.length; j++) {
-            // Checking for substrings because many input their GitHub username as "github.com/username".
-            if (words[j].includes(username.toLowerCase())) {
+            // Checking for substrings because many input their 
+            // GitHub username as "github.com/username".
+            if (words[j].includes(PULL_REQUST_INFO.username.toLowerCase())) {
                 return true;
             }
         }
@@ -102,30 +108,30 @@ const checkIfCorporateCLAFound = async (googleSheetsApi, username) => {
     return false;
 };
 
-const postCommentOnPullRequest = async (areBothCLAsSigned, errorFoundOnCLACheck) => {
+const postCommentOnPullRequest = async (hasSignedCLA, errorFoundOnCLACheck) => {
     const octokit = new Octokit();
 
     return octokit.request(`POST /repos/${PULL_REQUST_INFO.username}/${PULL_REQUST_INFO.repoName}/issues/${PULL_REQUST_INFO.id}/comments`, {
         owner: PULL_REQUST_INFO.username,
         repo: PULL_REQUST_INFO.repoName,
         issue_number: PULL_REQUST_INFO.id,
-        body: getCommentBody(areBothCLAsSigned, errorFoundOnCLACheck),
+        body: getCommentBody(hasSignedCLA, errorFoundOnCLACheck),
         headers: {
-            authorization: `bearer ${PULL_REQUST_INFO.githubToken}`,
+            authorization: `bearer ${PULL_REQUST_INFO.gitHubToken}`,
             accept: 'application/vnd.github+json',    
             'X-GitHub-Api-Version': '2022-11-28'
         }
     });
 };
 
-const getCommentBody = (areBothCLAsSigned, errorFoundOnCLACheck) => {
+const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
     const commentTemplate = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
     const getTemplate = Handlebars.compile(commentTemplate);
     const commentBody = getTemplate({ 
         errorCla: errorFoundOnCLACheck,
-        hasCla: areBothCLAsSigned,
+        hasCla: hasSignedCLA,
         username: PULL_REQUST_INFO.username,
-        contributorsUrl: "https://google.com" /* TODO configure */
+        contributorsUrl: LINKS.contributorsListURL
      });
  
     return commentBody;
