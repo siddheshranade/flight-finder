@@ -88,8 +88,8 @@ const checkIfIndividualClaFound = async (googleSheetsApi, username) => {
 const checkIfCorporateClaFound = async (googleSheetsApi, username) => {
     console.log('check2');
     const response = await googleSheetsApi.spreadsheets.values.get({
-        spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC82', // fake
-        // spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8',
+        // spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC82', // fake
+        spreadsheetId: '1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8',
         range: 'H2:H'
     });
 
@@ -137,7 +137,7 @@ const writeComment = async (settings, hasCla, errorCla) => {
 
 const getCommentBody = (username, hasCla, errorCla) => {
     // const template = '<span>{{greetingMsg}}</span>';
-    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment.hbs', 'utf-8');
+    const template = fs.readFileSync('./.github/actions/templates/pullRequestComment2.hbs', 'utf-8');
     const templateFunction = Handlebars.compile(template);
     const commentBody = templateFunction({ 
         errorCla: errorCla,
