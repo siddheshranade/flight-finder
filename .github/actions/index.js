@@ -121,7 +121,7 @@ const checkIfCorporateClaFound = async (googleSheetsApi, username) => {
 const writeComment = async (settings, hasCla, errorCla) => {
     const octokit = new Octokit();
 
-    console.log('before request');
+    console.log('-- writeComment start --');
     return octokit.request(`POST /repos/siddheshranade/flight-finder/issues/${process.env.PR_NUMBER}/comments`, {
     owner: settings.owner,
     repo: settings.repo,
@@ -137,6 +137,7 @@ const writeComment = async (settings, hasCla, errorCla) => {
 
 const getCommentBody = (username, hasCla, errorCla) => {
     // const template = '<span>{{greetingMsg}}</span>';
+    console.log('--getCommentBody start--');
     const template = fs.readFileSync('./.github/actions/templates/pullRequestComment2.hbs', 'utf-8');
     const templateFunction = Handlebars.compile(template);
     const commentBody = templateFunction({ 
@@ -146,7 +147,8 @@ const getCommentBody = (username, hasCla, errorCla) => {
         contributorsUrl: "https://google.com" /* TODO configure */
      });
 
-    // console.log('SIDBOI GOT \n', commentBody);    
+    // console.log('SIDBOI GOT \n', commentBody);   
+    console.log('--getCommentBody end--'); 
     return commentBody;
 };
 
