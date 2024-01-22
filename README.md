@@ -16,6 +16,9 @@ A website that gives you real-time details on current flights.
 
 ## Assumptions and Limitations
 
+
+
+
 1. I couldn't use the AviationStack API as it doesn't allow any https requests on a free subscription. Looked around and found airlabs.co, whose API seemed like the best free option and has most of the details needed.
 2. The AirLabs API doesn't accept latitude, longitude, and status as request params though, so to implement those filters I retrieved all records and then filtered the array. This has affected the website's performance.
 3. The user-facing input form only accepts IATA codes for airlines and airports and not their full names for now. (You can only enter "AA" and not "American Airlines" to get a valid response. Same for airports - only "IAD" and not "Dulles International" will work.)
