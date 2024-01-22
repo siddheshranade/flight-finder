@@ -5,6 +5,7 @@ on:
 
 jobs:
   check_for_CLA:
+    if: ${{ github.ref_name == 'catch-22'}}
     runs-on: ubuntu-latest
     permissions:
       issues: write
