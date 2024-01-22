@@ -1,8 +1,9 @@
 name: CLA
-on: 
+on:
   workflow_dispatch:
   pull_request:
-    branches: test24
+    branches:
+      - test22  
 
 jobs:
   check_for_CLA:
