@@ -5,8 +5,8 @@ import fs from "fs-extra";
 
 const PULL_REQUST_INFO = {
     id: process.env.PR_NUMBER,
-    repoName: process.env.GITHUB_REPOSITORY.split('/')[1],
-    username: process.env.GITHUB_ACTOR,
+    repoName: 'flight-finder' || process.env.GITHUB_REPOSITORY.split('/')[1],
+    username: process.env.GITHUB_ACTOR || 'siddheshranade',
     gitHubToken: process.env.GITHUB_TOKEN
 };
 
@@ -79,6 +79,10 @@ const checkIfIndividualCLAFound = async (googleSheetsApi) => {
     return false;
 };
 
+const testMethod = () => {
+    return true;
+}
+
 const checkIfCorporateCLAFound = async (googleSheetsApi) => {
     const response = await googleSheetsApi.spreadsheets.values.get({
         spreadsheetId: GOOGLE_SHEETS_INFO.corporateCLASheetId,
@@ -138,3 +142,18 @@ const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
 };
 
 main();
+
+// ---
+
+// export { testMethod };
+
+// module.exports = { checkIfIndividualCLAFound };
+
+// export {
+//     main,
+//     checkIfUserHasSignedAnyCLA,
+//     getGoogleSheetsApiClient,
+//     checkIfIndividualCLAFound,
+//     checkIfCorporateCLAFound,
+//     postCommentOnPullRequest
+// };

@@ -2,6 +2,7 @@ name: CLA
 on: 
   workflow_dispatch:
   pull_request:
+    branches: test24
 
 jobs:
   check_for_CLA:
