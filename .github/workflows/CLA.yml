@@ -1,8 +1,7 @@
 name: CLA
 on:
   workflow_dispatch:
-  issue_comment:
-    types: [created, edited, deleted]
+  push:
 
 jobs:
   check_for_CLA:
@@ -17,7 +16,7 @@ jobs:
         with:
           node-version: '20'
       - name: install npm packages
-        run: npm install
+        run: npm install googleapis @octokit/core handlebars fs-extra
       - name: run script
         run: node .github/scripts/index.js
         env:
