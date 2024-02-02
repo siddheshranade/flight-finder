@@ -13,12 +13,20 @@ const PULL_REQUST_INFO = {
   gitHubToken: process.env.GITHUB_TOKEN,
 };
 
-/* TODO: 1. Replace with actual Cesium CLA spreadsheet Ids, 2. Retrieve Ids from GitHub Secrets, not expose */
-const GOOGLE_SHEETS_INFO = {
-  individualCLASheetId: "1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE",
-  corporateCLASheetId: "1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8",
-};
+// siddhesh@cesium.com sheets
+// const GOOGLE_SHEETS_INFO = {
+//   individualCLASheetId: "1oRRS8OG4MfXaQ8uA4uWQWukaOqxEE3N-JuqzrqGGeaE",
+//   corporateCLASheetId: "1dnoqifzpXB81G1V4bsVJYM3D19gXuwyVZZ-IgNgCkC8",
+// };
 
+// ranade.siddhesh@gmail.com sheets
+const GOOGLE_SHEETS_INFO = {
+    individualCLASheetId: "1Iyaj2bct-BLJmfyJFVufQgB02fhuevZQlDWN19c8WzI",
+    corporateCLASheetId: "1J9scmTeH-zdC4mrZofg_rGWljCHxlqSzt4jCFYrtgCU",
+  };
+
+const GOOGLE_API_KEY = "AIzaSyBNw0QkoQeeSDLShH5oRFQsafCkqUSBXu4"; // personal
+// const GOOGLE_API_KEY = "AIzaSyDMj0_PqIApqk-2oYhRjJaIYI_HvzxHN4E"; // cesium
 /* TODO: Change to actual link */
 const LINKS = {
   contributorsListURL: "https://google.com",
@@ -129,7 +137,7 @@ const getGoogleSheetsApiClient = async () => {
 //   });
 //   const googleAuthClient = await auth.getClient();
 
-  return google.sheets({ version: "v4", auth: "AIzaSyDMj0_PqIApqk-2oYhRjJaIYI_HvzxHN4E" });
+  return google.sheets({ version: "v4", auth: GOOGLE_API_KEY });
 };
 
 const postCommentOnPullRequest = async (hasSignedCLA, errorFoundOnCLACheck) => {
