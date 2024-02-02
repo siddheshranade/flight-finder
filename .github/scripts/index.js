@@ -115,6 +115,7 @@ const checkIfCorporateCLAFound = async () => {
 const getValuesFromGoogleSheet = async (sheetId, cellRanges) => {
   const googleSheetsApi = await getGoogleSheetsApiClient();
 
+  console.log('GET');
   return googleSheetsApi.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range: cellRanges,
@@ -122,13 +123,13 @@ const getValuesFromGoogleSheet = async (sheetId, cellRanges) => {
 };
 
 const getGoogleSheetsApiClient = async () => {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: "GoogleConfig.json",
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
-  const googleAuthClient = await auth.getClient();
+//   const auth = new google.auth.GoogleAuth({
+//     keyFile: "GoogleConfig.json",
+//     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+//   });
+//   const googleAuthClient = await auth.getClient();
 
-  return google.sheets({ version: "v4", auth: googleAuthClient });
+  return google.sheets({ version: "v4", auth: "AIzaSyDMj0_PqIApqk-2oYhRjJaIYI_HvzxHN4E" });
 };
 
 const postCommentOnPullRequest = async (hasSignedCLA, errorFoundOnCLACheck) => {
