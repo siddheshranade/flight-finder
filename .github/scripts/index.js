@@ -155,7 +155,7 @@ const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
   console.log("getting comment template...");
 
   const commentTemplate = fs.readFileSync(
-    "./.github/actions/check-for-CLA/templates/pullRequestComment.hbs",
+    "./.github/scripts/templates/pullRequestComment.hbs",
     "utf-8"
   );
   const getTemplate = Handlebars.compile(commentTemplate);
