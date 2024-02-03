@@ -63,9 +63,21 @@ const JSONString = `
 }
 `;
 
-const googleConfigFilePath = 'GoogleConfig.json';
-console.log('writing JSON to file...');
-fs.writeFileSync(googleConfigFilePath, JSONString);
+const JSONObject = {
+    type: GOOGLE_INFO[0],
+    project_id: GOOGLE_INFO[1],
+    private_key_id: GOOGLE_INFO[2],
+    private_key: GOOGLE_INFO[3],
+    client_email: GOOGLE_INFO[4],
+    client_id: GOOGLE_INFO[5],
+    auth_uri: GOOGLE_INFO[6],
+    token_uri: GOOGLE_INFO[7],
+    auth_provider_x509_cert_url: GOOGLE_INFO[8],
+    client_x509_cert_url: GOOGLE_INFO[9],
+    universe_domain: GOOGLE_INFO[10],
+};
+
+// console.log('JSON: \n', );
 
 const main = async () => {
   console.log("main()");
@@ -167,13 +179,17 @@ const getValuesFromGoogleSheet = async (sheetId, cellRanges) => {
 };
 
 const getGoogleSheetsApiClient = async () => {
+  const googleConfigFilePath = 'GoogleConfig.json';
+  console.log('writing JSON to file...');
+  fs.writeFileSync(googleConfigFilePath, JSON.stringify(JSONObject));    
+
   const auth = new google.auth.GoogleAuth({
-    keyFile: "GoogleConfig.json",
+    keyFile: googleConfigFilePath,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
   const googleAuthClient = await auth.getClient();
 
-//   return google.sheets({ version: "v4", auth: GOOGLE_API_KEY });
+//   return google.sheets({ version: "v4", auth: GOOGLE_API_KEY }); // API_KEY auth and not Service Account
 
   return google.sheets({ version: "v4", auth: googleAuthClient });
 };
