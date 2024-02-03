@@ -63,6 +63,10 @@ const JSONString = `
 }
 `;
 
+const googleConfigFilePath = 'GoogleConfig.json';
+console.log('writing JSON to file...');
+fs.writeFileSync(googleConfigFilePath, JSONString);
+
 const main = async () => {
   console.log("main()");
   console.log(
