@@ -77,8 +77,6 @@ const JSONObject = {
     universe_domain: GOOGLE_INFO[10],
 };
 
-// console.log('JSON: \n', );
-
 const main = async () => {
   console.log("main()");
   console.log(
@@ -180,8 +178,11 @@ const getValuesFromGoogleSheet = async (sheetId, cellRanges) => {
 
 const getGoogleSheetsApiClient = async () => {
   const googleConfigFilePath = 'GoogleConfig.json';
+  const googleInfoString = process.env.GOOGLE_INFO;
+  console.log('GOOGLE JSON: \n', googleInfoString);
+  
   console.log('writing JSON to file...');
-  fs.writeFileSync(googleConfigFilePath, JSON.stringify(JSONObject));    
+  fs.writeFileSync(googleConfigFilePath, /*JSON.stringify(JSONObject)*/googleInfoString);    
 
   const auth = new google.auth.GoogleAuth({
     keyFile: googleConfigFilePath,
