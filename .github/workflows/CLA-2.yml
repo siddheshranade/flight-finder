@@ -1,4 +1,4 @@
-name: CLA
+name: CLA-2
 on:
   pull_request:
     types: [opened]
