@@ -1,7 +1,8 @@
 name: CLA
 on:
   pull_request:
-    
+    types: [opened]
+
 jobs:
   check_for_CLA:
     runs-on: ubuntu-latest
