@@ -1,8 +1,7 @@
 name: CLA
 on:
-  workflow_dispatch:
-  push:
-
+  pull_request:
+    
 jobs:
   check_for_CLA:
     runs-on: ubuntu-latest
