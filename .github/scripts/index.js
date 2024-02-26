@@ -3,12 +3,12 @@ import { google } from "googleapis";
 import Handlebars from "handlebars";
 import fs from "fs-extra";
 
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || "siddheshranade/flight-finder";
+// const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || "siddheshranade/flight-finder";
 
 const PULL_REQUST_INFO = {
-  id: process.env.PR_NUMBER || 49,
-  owner: GITHUB_REPOSITORY.split("/")[0],
-  repoName: GITHUB_REPOSITORY.split("/")[1],
+  id: process.env.PULL_REQUEST_ID,
+  owner: process.env.GITHUB_REPOSITORY.split("/")[0],
+  repoName: process.env.GITHUB_REPOSITORY.split("/")[1],
   username: process.env.GITHUB_ACTOR,
   gitHubToken: process.env.GITHUB_TOKEN,
 };
@@ -36,9 +36,11 @@ const LINKS = {
 const main = async () => {
   console.log("main()");
   console.log(
-    PULL_REQUST_INFO.repoName,
+    PULL_REQUST_INFO.id,
     PULL_REQUST_INFO.owner,
-    PULL_REQUST_INFO.username
+    PULL_REQUST_INFO.repoName,
+    PULL_REQUST_INFO.username,
+    PULL_REQUST_INFO.gitHubToken
   );
 
   let hasSignedCLA;
