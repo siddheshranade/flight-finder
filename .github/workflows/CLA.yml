@@ -21,5 +21,6 @@ jobs:
         run: node .github/scripts/index.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_ID: ${{ github.event.number }}
           PR_NUMBER: ${{ github.event.number }}
           GOOGLE_INFO: ${{ secrets.GOOGLE_INFO }}

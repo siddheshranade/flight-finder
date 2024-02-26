@@ -36,10 +36,10 @@ const LINKS = {
 const main = async () => {
   console.log("main()");
   console.log(
-    PULL_REQUST_INFO.id,
-    PULL_REQUST_INFO.owner,
-    PULL_REQUST_INFO.repoName,
-    PULL_REQUST_INFO.username,
+    PULL_REQUST_INFO.id, // undefined??
+    PULL_REQUST_INFO.owner, // 1
+    PULL_REQUST_INFO.repoName, // 1
+    PULL_REQUST_INFO.username, // 2
     PULL_REQUST_INFO.gitHubToken
   );
 
