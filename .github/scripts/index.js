@@ -95,6 +95,7 @@ const checkIfIndividualCLAFound = async () => {
 };
 
 const checkIfCorporateCLAFound = async () => {
+  console.log('checking corporate CLA for... ', PULL_REQUST_INFO.username.toLowerCase());
   const response = await getValuesFromGoogleSheet(
     GOOGLE_SHEETS_INFO.corporateCLASheetId,
     "H2:H"
@@ -103,13 +104,14 @@ const checkIfCorporateCLAFound = async () => {
   const rows = response.data.values;
   for (let i = 0; i < rows.length; i++) {
     if (rows[i].length === 0) {
+      console.log('empty row ', i);
       continue;
     }
 
     // We're more lenient with the ScheduleA username check since it's an unformatted text field.
     let rowScheduleA = rows[i][0].toLowerCase();
-    console.log('GOT VAL ', rowScheduleA);
     rowScheduleA = rowScheduleA.replace(/\n/g, " ");
+    console.log('GOT VAL rowScheduleA', rowScheduleA);
     const words = rowScheduleA.split(" ");
 
     for (let j = 0; j < words.length; j++) {
