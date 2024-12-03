@@ -46,19 +46,24 @@ const main = async () => {
   let hasSignedCLA;
   let errorFoundOnCLACheck;
 
-  try {
-    hasSignedCLA = await checkIfUserHasSignedAnyCLA();
-  } catch (error) {
-    console.log("ERROR2 ", error);
-    errorFoundOnCLACheck = error.toString();
-  }
+  // try {
+  //   hasSignedCLA = await checkIfUserHasSignedAnyCLA();
+  // } catch (error) {
+  //   console.log("ERROR2 ", error);
+  //   errorFoundOnCLACheck = error.toString();
+  // }
 
-  console.log("pre-comment...");
-  const response = await postCommentOnPullRequest(
-    hasSignedCLA,
-    errorFoundOnCLACheck
-  );
-  console.log("post-comment, response: ", response);
+  // console.log("pre-comment...");
+  // const response = await postCommentOnPullRequest(
+  //   hasSignedCLA,
+  //   errorFoundOnCLACheck
+  // );
+  // console.log("post-comment, response: ", response);
+
+  // Testing https://github.com/CesiumGS/cesium/pull/12354
+  console.log("Pre-label adding..");
+  const response2 = await addLabelToPullRequest();
+  console.log("Label response: " , response2);
 };
 
 const checkIfUserHasSignedAnyCLA = async () => {
@@ -191,6 +196,26 @@ const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
   });
 
   return commentBody;
+};
+
+const addLabelToPullRequest = async () => {
+  const octokit = new Octokit();
+
+  console.log("Adding label... NEW CONSOLE");
+  return octokit.request(
+    `POST /repos/${PULL_REQUST_INFO.owner}/${PULL_REQUST_INFO.repoName}/issues/66/labels`,
+    {
+      owner: PULL_REQUST_INFO.username,
+      repo: PULL_REQUST_INFO.repoName,
+      issue_number: PULL_REQUST_INFO.id,
+      labels: ["documentation"],
+      headers: {
+        authorization: `bearer ${PULL_REQUST_INFO.gitHubToken}`,
+        accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    },
+  );
 };
 
 main();
