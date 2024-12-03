@@ -1,6 +1,6 @@
 name: CLA
 on:
-  push
+  push:
 
 jobs:
   check_for_CLA:
