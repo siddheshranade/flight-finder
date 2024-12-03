@@ -1,6 +1,6 @@
 name: CLA
 on:
-  push:
+  pull_request:
 
 jobs:
   check_for_CLA:
