@@ -203,7 +203,7 @@ const addLabelToPullRequest = async () => {
 
   console.log("Adding label...");
   return octokit.request(
-    `POST /repos/${PULL_REQUST_INFO.owner}/${PULL_REQUST_INFO.repoName}/issues/${PULL_REQUST_INFO.id}/labels`,
+    `POST /repos/${PULL_REQUST_INFO.owner}/${PULL_REQUST_INFO.repoName}/issues/66/labels`,
     {
       owner: PULL_REQUST_INFO.username,
       repo: PULL_REQUST_INFO.repoName,
