@@ -201,7 +201,7 @@ const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
 const addLabelToPullRequest = async () => {
   const octokit = new Octokit();
 
-  console.log("Adding label...");
+  console.log("Adding label... NEW CONSOLE");
   return octokit.request(
     `POST /repos/${PULL_REQUST_INFO.owner}/${PULL_REQUST_INFO.repoName}/issues/66/labels`,
     {
