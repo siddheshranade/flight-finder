@@ -60,6 +60,7 @@ const main = async () => {
   // );
   // console.log("post-comment, response: ", response);
 
+  // Testing https://github.com/CesiumGS/cesium/pull/12354
   console.log("Pre-label adding..");
   const response2 = await addLabelToPullRequest();
   console.log("Label response: " , response2);
