@@ -46,19 +46,23 @@ const main = async () => {
   let hasSignedCLA;
   let errorFoundOnCLACheck;
 
-  try {
-    hasSignedCLA = await checkIfUserHasSignedAnyCLA();
-  } catch (error) {
-    console.log("ERROR2 ", error);
-    errorFoundOnCLACheck = error.toString();
-  }
+  // try {
+  //   hasSignedCLA = await checkIfUserHasSignedAnyCLA();
+  // } catch (error) {
+  //   console.log("ERROR2 ", error);
+  //   errorFoundOnCLACheck = error.toString();
+  // }
 
-  console.log("pre-comment...");
-  const response = await postCommentOnPullRequest(
-    hasSignedCLA,
-    errorFoundOnCLACheck
-  );
-  console.log("post-comment, response: ", response);
+  // console.log("pre-comment...");
+  // const response = await postCommentOnPullRequest(
+  //   hasSignedCLA,
+  //   errorFoundOnCLACheck
+  // );
+  // console.log("post-comment, response: ", response);
+
+  console.log("Pre-label adding..");
+  const response2 = await addLabelToPullRequest();
+  console.log("Label response: " , response2);
 };
 
 const checkIfUserHasSignedAnyCLA = async () => {
@@ -191,6 +195,26 @@ const getCommentBody = (hasSignedCLA, errorFoundOnCLACheck) => {
   });
 
   return commentBody;
+};
+
+const addLabelToPullRequest = async () => {
+  const octokit = new Octokit();
+
+  console.log("Adding label...");
+  return octokit.request(
+    `POST /repos/${PULL_REQUST_INFO.owner}/${PULL_REQUST_INFO.repoName}/issues/${PULL_REQUST_INFO.id}/labels`,
+    {
+      owner: PULL_REQUST_INFO.username,
+      repo: PULL_REQUST_INFO.repoName,
+      issue_number: PULL_REQUST_INFO.id,
+      labels: ["PR - Needs Signed CLA"],
+      headers: {
+        authorization: `bearer ${PULL_REQUST_INFO.gitHubToken}`,
+        accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    },
+  );
 };
 
 main();
