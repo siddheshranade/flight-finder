@@ -208,7 +208,7 @@ const addLabelToPullRequest = async () => {
       owner: PULL_REQUST_INFO.username,
       repo: PULL_REQUST_INFO.repoName,
       issue_number: PULL_REQUST_INFO.id,
-      labels: ["PR - Needs Signed CLA"],
+      labels: ["documentation"],
       headers: {
         authorization: `bearer ${PULL_REQUST_INFO.gitHubToken}`,
         accept: "application/vnd.github+json",
